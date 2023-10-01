@@ -16,7 +16,7 @@ jobs:
       MIX_ENV: test
     strategy:
       matrix:
-        elixir: ["1.13.3"]
+        elixir: ["1.14.2"]
         otp: ["24.0.5"]
 
     # Remove if you don't need a database

@@ -16,7 +16,7 @@ jobs:
       MIX_ENV: dev
     strategy:
       matrix:
-        elixir: ["1.13.3"]
+        elixir: ["1.14.2"]
         otp: ["24.0.5"]
 
     steps:
