@@ -68,7 +68,8 @@ defmodule Yggdrasil.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:excoveralls, "~> 0.10", only: :test},
-      {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false}
+      {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false},
+      {:doctor, "~> 0.21.0", only: :dev}
     ]
   end
 
