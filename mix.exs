@@ -9,7 +9,22 @@ defmodule Yggdrasil.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        check: :test,
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ],
+      dialyzer: [
+        ignore_warnings: ".dialyzer_ignore.exs",
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
+        flags: [:error_handling, :race_conditions, :unknown],
+        # Error out when an ignore rule is no longer useful so we can remove it
+        list_unused_filters: true
+      ]
     ]
   end
 
@@ -51,7 +66,8 @@ defmodule Yggdrasil.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.3", only: [:dev], runtime: false}
+      {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
+      {:excoveralls, "~> 0.10", only: :test}
     ]
   end
 
@@ -69,7 +85,16 @@ defmodule Yggdrasil.MixProject do
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind default", "esbuild default"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
+      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
+      check: [
+        "clean",
+        "deps.unlock --check-unused",
+        "compile --warnings-as-errors",
+        "format --check-formatted",
+        "deps.unlock --check-unused",
+        "test --warnings-as-errors",
+        "credo"
+      ]
     ]
   end
 end
