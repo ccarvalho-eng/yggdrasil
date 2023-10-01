@@ -1,8 +1,8 @@
 # Yggdrasil
 
-[![ExUnit Tests](https://github.com/wood-archer/yggdrasil/actions/workflows/elixir-build-and-test.yml/badge.svg)](https://github.com/wood-archer/side-quiver/actions/workflows/elixir-build-and-test.yml)
-[![Dialyzer](https://github.com/wood-archer/yggdrasil/actions/workflows/elixir-dialyzer.yml/badge.svg)](https://github.com/wood-archer/side-quiver/actions/workflows/elixir-dialyzer.yml)
-[![Quality Checks](https://github.com/wood-archer/yggdrasil/actions/workflows/elixir-quality-checks.yml/badge.svg)](https://github.com/wood-archer/side-quiver/actions/workflows/elixir-quality-checks.yml)
+[![ExUnit Tests](https://github.com/wood-archer/yggdrasil/actions/workflows/elixir-build-and-test.yml/badge.svg)](https://github.com/wood-archer/yggdrasil/actions/workflows/elixir-build-and-test.yml)
+[![Dialyzer](https://github.com/wood-archer/yggdrasil/actions/workflows/elixir-dialyzer.yml/badge.svg)](https://github.com/wood-archer/yggdrasil/actions/workflows/elixir-dialyzer.yml)
+[![Quality Checks](https://github.com/wood-archer/yggdrasil/actions/workflows/elixir-quality-checks.yml/badge.svg)](https://github.com/wood-archer/yggdrasil/actions/workflows/elixir-quality-checks.yml)
 
 To start your Phoenix server:
 
