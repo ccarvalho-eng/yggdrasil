@@ -19,7 +19,7 @@ defmodule Yggdrasil.GameHub.Tictac.Player do
   ## Examples
 
       iex> Player.new("Alice", "X")
-      %Yggdrasil.Games.Tictac.Player{name: "Alice", letter: "X"}
+      %Yggdrasil.GameHub.Tictac.Player{name: "Alice", letter: "X"}
 
   """
   @spec new(name :: String.t(), letter :: String.t()) :: %__MODULE__{}
@@ -37,7 +37,7 @@ defmodule Yggdrasil.GameHub.Tictac.Player do
   ## Examples
 
       iex> player = Player.new("Alice", "X")
-      %Yggdrasil.Games.Tictac.Player{name: "Alice", letter: "X"}
+      %Yggdrasil.GameHub.Tictac.Player{name: "Alice", letter: "X"}
 
       iex> Player.valid?(player)
       true
