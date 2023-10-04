@@ -9,8 +9,8 @@ defmodule Yggdrasil.GameHub.Tictac.Player do
   use TypedStruct
 
   typedstruct do
-    field(:name, String.t())
-    field(:letter, String.t())
+    field(:name, binary())
+    field(:letter, binary())
   end
 
   @doc """
