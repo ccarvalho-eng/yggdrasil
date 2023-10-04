@@ -69,7 +69,8 @@ defmodule Yggdrasil.MixProject do
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:excoveralls, "~> 0.10", only: :test},
       {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false},
-      {:doctor, "~> 0.21.0", only: :dev}
+      {:doctor, "~> 0.21.0", only: :dev},
+      {:typed_struct, "~> 0.3.0"}
     ]
   end
 
