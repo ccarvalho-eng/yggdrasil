@@ -37,14 +37,7 @@ defmodule Yggdrasil.GameHub.Tictac do
   """
   @spec init() :: t()
   def init do
-    struct(
-      __MODULE__,
-      %{
-        players: [],
-        player_turn: nil,
-        board: build_board()
-      }
-    )
+    struct(__MODULE__, %{players: [], player_turn: nil, board: build_board()})
   end
 
   defp build_board do
