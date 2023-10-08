@@ -18,11 +18,13 @@ defmodule Yggdrasil.GameHub.Tictac.Player do
 
   ## Examples
 
-      iex> Yggdrasil.GameHub.Tictac.Player.build("Larah", "X")
-      %Yggdrasil.GameHub.Tictac.Player{name: "Larah", letter: "X"}
+      iex> alias Yggdrasil.GameHub.Tictac.Player
+      iex> Player.build("Larah", "X")
+      %Player{name: "Larah", letter: "X"}
 
-      iex> Yggdrasil.GameHub.Tictac.Player.build(nil, nil)
-      %Yggdrasil.GameHub.Tictac.Player{name: nil, letter: nil}
+      iex> alias Yggdrasil.GameHub.Tictac.Player
+      iex> Player.build(nil, nil)
+      %Player{name: nil, letter: nil}
 
   """
   @spec build(name :: String.t() | nil, letter :: String.t() | nil) :: %__MODULE__{}

@@ -14,11 +14,13 @@ defmodule Yggdrasil.GameHub.Tictac.Square do
 
   ## Examples
 
-      iex> Yggdrasil.GameHub.Tictac.Square.build(:sq11)
-      %Yggdrasil.GameHub.Tictac.Square{name: :sq11, letter: nil}
+      iex> alias Yggdrasil.GameHub.Tictac.Square
+      iex> Square.build(:sq1)
+      %Square{name: :sq1, letter: nil}
 
-      iex> Yggdrasil.GameHub.Tictac.Square.build(:sq22, "X")
-      %Yggdrasil.GameHub.Tictac.Square{name: :sq22, letter: "X"}
+      iex> alias Yggdrasil.GameHub.Tictac.Square
+      iex> Square.build(:sq2, "X")
+      %Square{name: :sq2, letter: "X"}
 
   """
   @spec build(name :: atom(), letter :: String.t() | nil) :: t()
@@ -32,13 +34,16 @@ defmodule Yggdrasil.GameHub.Tictac.Square do
 
   ## Examples
 
-      iex> Yggdrasil.GameHub.Tictac.Square.is_open?(%Yggdrasil.GameHub.Tictac.Square{name: :sq11, letter: nil})
+      iex> alias Yggdrasil.GameHub.Tictac.Square
+      iex> Square.is_open?(%Square{name: :sq1, letter: nil})
       true
 
-      iex> Yggdrasil.GameHub.Tictac.Square.is_open?(%Yggdrasil.GameHub.Tictac.Square{name: :sq11, letter: "O"})
+      iex> alias Yggdrasil.GameHub.Tictac.Square
+      iex> Square.is_open?(%Square{name: :sq1, letter: "O"})
       false
 
-      iex> Yggdrasil.GameHub.Tictac.Square.is_open?(%Yggdrasil.GameHub.Tictac.Square{name: :sq11, letter: "X"})
+      iex> alias Yggdrasil.GameHub.Tictac.Square
+      iex> Square.is_open?(%Square{name: :sq1, letter: "X"})
       false
 
   """
