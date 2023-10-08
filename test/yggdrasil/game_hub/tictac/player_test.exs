@@ -3,14 +3,14 @@ defmodule Yggdrasil.GameHub.Tictac.PlayerTest do
 
   alias Yggdrasil.GameHub.Tictac.Player
 
-  describe "new/2" do
-    test "creates a new player with valid arguments" do
-      player = Player.new("Alice", "X")
+  describe "build/2" do
+    test "creates a build player with valid arguments" do
+      player = Player.build("Alice", "X")
       assert %Player{name: "Alice", letter: "X"} = player
     end
 
     test "returns nil for invalid arguments" do
-      player = Player.new(nil, "X")
+      player = Player.build(nil, "X")
       assert is_nil(player)
     end
   end

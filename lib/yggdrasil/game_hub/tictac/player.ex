@@ -14,20 +14,20 @@ defmodule Yggdrasil.GameHub.Tictac.Player do
   end
 
   @doc """
-  Creates a new player.
+  Builds a new player.
 
   ## Examples
 
-      iex> Player.new("Alice", "X")
-      %Yggdrasil.GameHub.Tictac.Player{name: "Alice", letter: "X"}
+      iex> Player.build("Alice", "X")
+      %__MODULE__{name: "Alice", letter: "X"}
 
   """
-  @spec new(name :: String.t(), letter :: String.t()) :: %__MODULE__{}
-  def new(name, letter) when is_binary(name) and is_binary(letter) do
+  @spec build(name :: String.t(), letter :: String.t()) :: %__MODULE__{}
+  def build(name, letter) when is_binary(name) and is_binary(letter) do
     struct(__MODULE__, %{name: name, letter: letter})
   end
 
-  def new(_, _), do: nil
+  def build(_, _), do: nil
 
   @doc """
   Checks if a player is valid.
@@ -36,10 +36,10 @@ defmodule Yggdrasil.GameHub.Tictac.Player do
 
   ## Examples
 
-      iex> player = Player.new("Alice", "X")
-      %Yggdrasil.GameHub.Tictac.Player{name: "Alice", letter: "X"}
+      iex> player = build("Alice", "X")
+      %__MODULE__{name: "Alice", letter: "X"}
 
-      iex> Player.valid?(player)
+      iex> valid?(player)
       true
 
   """
