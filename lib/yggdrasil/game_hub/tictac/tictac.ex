@@ -1,4 +1,4 @@
-defmodule Yggdrasil.GameHub.Tictac.State do
+defmodule Yggdrasil.GameHub.Tictac do
   @moduledoc """
   Module de game state for a tic-tac-toe game.
   """
