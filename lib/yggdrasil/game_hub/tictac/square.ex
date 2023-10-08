@@ -1,10 +1,8 @@
 defmodule Yggdrasil.GameHub.Tictac.Square do
   @moduledoc """
   This module represents a square on a Tic Tac Toe board.
-  """  
+  """
   use TypedStruct
-
-  alias __MODULE__
 
   typedstruct do
     field(:name, atom())
@@ -23,7 +21,7 @@ defmodule Yggdrasil.GameHub.Tictac.Square do
       %__MODULE__{name: :sq22, letter: "X"}
 
   """
-  @spec build(name :: atom(), letter :: String() | nil) :: t()
+  @spec build(name :: atom(), letter :: String.t() | nil) :: t()
   def build(name, letter \\ nil) do
     struct(__MODULE__, %{name: name, letter: letter})
   end

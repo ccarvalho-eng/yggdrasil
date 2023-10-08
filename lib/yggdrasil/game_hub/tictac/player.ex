@@ -18,36 +18,15 @@ defmodule Yggdrasil.GameHub.Tictac.Player do
 
   ## Examples
 
-      iex> Player.build("Alice", "X")
-      %__MODULE__{name: "Alice", letter: "X"}
+      iex> Yggdrasil.GameHub.Tictac.Player.build("Larah", "X")
+      %Yggdrasil.GameHub.Tictac.Player{name: "Larah", letter: "X"}
+
+      iex> Yggdrasil.GameHub.Tictac.Player.build(nil, nil)
+      %Yggdrasil.GameHub.Tictac.Player{name: nil, letter: nil}
 
   """
-  @spec build(name :: String.t(), letter :: String.t()) :: %__MODULE__{}
-  def build(name, letter) when is_binary(name) and is_binary(letter) do
+  @spec build(name :: String.t() | nil, letter :: String.t() | nil) :: %__MODULE__{}
+  def build(name \\ nil, letter \\ nil) do
     struct(__MODULE__, %{name: name, letter: letter})
   end
-
-  def build(_, _), do: nil
-
-  @doc """
-  Checks if a player is valid.
-
-  A player is considered valid if both name and letter are not nil.
-
-  ## Examples
-
-      iex> player = build("Alice", "X")
-      %__MODULE__{name: "Alice", letter: "X"}
-
-      iex> valid?(player)
-      true
-
-  """
-  @spec valid?(player :: t()) :: boolean
-  def valid?(%__MODULE__{name: name, letter: letter})
-      when is_binary(name) and is_binary(letter) do
-    true
-  end
-
-  def valid?(_), do: false
 end
