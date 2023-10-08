@@ -15,12 +15,12 @@ defmodule Yggdrasil.GameHub.Tictac.Square do
   ## Examples
 
       iex> alias Yggdrasil.GameHub.Tictac.Square
-      iex> Square.build(:sq1)
-      %Square{name: :sq1, letter: nil}
+      iex> Square.build(:sq11)
+      %Square{name: :sq11, letter: nil}
 
       iex> alias Yggdrasil.GameHub.Tictac.Square
-      iex> Square.build(:sq2, "X")
-      %Square{name: :sq2, letter: "X"}
+      iex> Square.build(:sq22, "X")
+      %Square{name: :sq22, letter: "X"}
 
   """
   @spec build(name :: atom(), letter :: String.t() | nil) :: t()
@@ -35,15 +35,15 @@ defmodule Yggdrasil.GameHub.Tictac.Square do
   ## Examples
 
       iex> alias Yggdrasil.GameHub.Tictac.Square
-      iex> Square.is_open?(%Square{name: :sq1, letter: nil})
+      iex> Square.is_open?(%Square{name: :sq11, letter: nil})
       true
 
       iex> alias Yggdrasil.GameHub.Tictac.Square
-      iex> Square.is_open?(%Square{name: :sq1, letter: "O"})
+      iex> Square.is_open?(%Square{name: :sq11, letter: "O"})
       false
 
       iex> alias Yggdrasil.GameHub.Tictac.Square
-      iex> Square.is_open?(%Square{name: :sq1, letter: "X"})
+      iex> Square.is_open?(%Square{name: :sq11, letter: "X"})
       false
 
   """
