@@ -1,6 +1,6 @@
 defmodule Yggdrasil.GameHub.Tictac.Square do
   @moduledoc """
-  This module represents a square on a Tic Tac Toe board.
+  This module represents a square on a Tic-Tac-Toe board.
   """
   use TypedStruct
 
