@@ -40,14 +40,14 @@ defmodule Yggdrasil.GameHub.Tictac do
       iex> alias Yggdrasil.GameHub.Tictac
       iex> Tictac.init()
       %Tictac{
-              board: [
-                %Square{letter: nil, name: :sq11}, %Square{letter: nil, name: :sq12}, %Square{letter: nil, name: :sq13},
-                %Square{letter: nil, name: :sq21}, %Square{letter: nil, name: :sq22}, %Square{letter: nil, name: :sq23},
-                %Square{letter: nil, name: :sq31}, %Square{letter: nil, name: :sq32}, %Square{letter: nil, name: :sq33}
-              ],
-              player_turn: nil,
-              players: []
-            }
+        board: [
+          %Square{letter: nil, name: :sq11}, %Square{letter: nil, name: :sq12}, %Square{letter: nil, name: :sq13},
+          %Square{letter: nil, name: :sq21}, %Square{letter: nil, name: :sq22}, %Square{letter: nil, name: :sq23},
+          %Square{letter: nil, name: :sq31}, %Square{letter: nil, name: :sq32}, %Square{letter: nil, name: :sq33}
+        ],
+        player_turn: nil,
+        players: []
+      }
 
   """
   @spec init() :: t()
