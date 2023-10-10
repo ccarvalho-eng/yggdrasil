@@ -83,7 +83,7 @@ defmodule Yggdrasil.GameHub.Tictac do
     end
   end
 
-  defp build_board() do
+  defp build_board do
     for row <- @row_range, col <- @col_range, do: Square.build(:"sq#{row}#{col}")
   end
 
