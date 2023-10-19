@@ -97,19 +97,70 @@ defmodule Yggdrasil.GameHub.Tictac do
   """
   @spec find_winning_combination(Player.t(), t()) :: list(atom()) | :not_found
   def find_winning_combination(player, game) do
-    case Enum.find(@winning_combinations, &did_player_win?(game.board, player.letter, &1)) do
+    case Enum.find(@winning_combinations, &did_player_win?(game, player, &1)) do
       nil -> :not_found
       combination -> combination
     end
+  end
+
+  @doc """
+  Determines if the game is over based on the current game state.
+
+  This function checks if the game has reached its end by evaluating two conditions:
+
+  1. Whether any player has won the game.
+  2. Whether there are no open squares left on the game board.
+
+  ## Examples
+
+      iex> alias Yggdrasil.GameHub.Tictac.Square
+      iex> alias Yggdrasil.GameHub.Tictac
+      iex> game = %Tictac{
+      ...>   board: [
+      ...>     %Square{letter: "X", name: :sq11},
+      ...>     %Square{letter: "X", name: :sq12},
+      ...>     %Square{letter: "X", name: :sq13},
+      ...>     %Square{letter: nil, name: :sq21},
+      ...>     %Square{letter: nil, name: :sq22},
+      ...>     %Square{letter: nil, name: :sq23},
+      ...>     %Square{letter: nil, name: :sq31},
+      ...>     %Square{letter: nil, name: :sq32},
+      ...>     %Square{letter: nil, name: :sq33}
+      ...>   ],
+      ...>   player_turn: nil,
+      ...>   players: [
+      ...>     %Player{letter: "X", name: "Larah"},
+      ...>     %Player{letter: "O", name: "Kristoff"}
+      ...>   ]
+      ...> }
+      iex> Tictac.game_over?(game)
+      true
+
+  """
+  @spec game_over?(t()) :: boolean()
+  def game_over?(game) do
+    a_player_won = did_any_player_win?(game)
+    no_open_squares = game |> get_open_squares() |> Enum.empty?()
+
+    a_player_won || no_open_squares
   end
 
   defp build_board do
     for row <- @row_range, col <- @col_range, do: Square.build(:"sq#{row}#{col}")
   end
 
-  defp did_player_win?(board, letter, combination) do
+  defp did_player_win?(game, player, combination) do
     Enum.all?(combination, fn square ->
-      has_matching_square?(board, square, letter)
+      has_matching_square?(game.board, square, player.letter)
+    end)
+  end
+
+  defp did_any_player_win?(game) do
+    Enum.any?(game.players, fn player ->
+      case find_winning_combination(player, game) do
+        :not_found -> false
+        [_, _, _] -> true
+      end
     end)
   end
 
