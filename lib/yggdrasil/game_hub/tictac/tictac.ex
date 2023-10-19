@@ -77,11 +77,7 @@ defmodule Yggdrasil.GameHub.Tictac do
   @spec get_valid_moves(t()) :: list(atom())
   def get_valid_moves(game) do
     Enum.reduce(game.board, [], fn square, acc ->
-      if Square.is_open?(square) do
-        [square.name | acc]
-      else
-        acc
-      end
+      if Square.is_open?(square), do: [square.name | acc], else: acc
     end)
   end
 
