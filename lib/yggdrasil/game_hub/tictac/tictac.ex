@@ -62,6 +62,30 @@ defmodule Yggdrasil.GameHub.Tictac do
   end
 
   @doc """
+  Returns a list of valid moves representing squares on the game board.
+
+  This function calculates and returns a list of squares that are valid moves based on the current game state.
+
+  ## Examples
+
+      iex> alias Yggdrasil.GameHub.Tictac
+      iex> game = Tictac.init()
+      iex> Tictac.get_valid_moves(game)
+      [:sq33, :sq32, :sq31, :sq23, :sq22, :sq21, :sq13, :sq12, :sq11]
+
+  """
+  @spec get_valid_moves(t()) :: list(atom())
+  def get_valid_moves(game) do
+    Enum.reduce(game.board, [], fn square, acc ->
+      if Square.is_open?(square) do
+        [square.name | acc]
+      else
+        acc
+      end
+    end)
+  end
+
+  @doc """
   Finds a winning combination for the specified player in the Tic-Tac-Toe game.
 
   ## Parameters
