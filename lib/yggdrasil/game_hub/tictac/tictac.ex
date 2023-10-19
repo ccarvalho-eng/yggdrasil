@@ -70,12 +70,12 @@ defmodule Yggdrasil.GameHub.Tictac do
 
       iex> alias Yggdrasil.GameHub.Tictac
       iex> game = Tictac.init()
-      iex> Tictac.get_valid_moves(game)
+      iex> Tictac.get_open_squares(game)
       [:sq33, :sq32, :sq31, :sq23, :sq22, :sq21, :sq13, :sq12, :sq11]
 
   """
-  @spec get_valid_moves(t()) :: list(atom())
-  def get_valid_moves(game) do
+  @spec get_open_squares(t()) :: list(atom())
+  def get_open_squares(game) do
     Enum.reduce(game.board, [], fn square, acc ->
       if Square.is_open?(square), do: [square.name | acc], else: acc
     end)
