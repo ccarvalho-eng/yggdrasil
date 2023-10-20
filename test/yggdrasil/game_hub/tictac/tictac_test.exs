@@ -6,89 +6,49 @@ defmodule Yggdrasil.GameHub.TictacTest do
 
   doctest Tictac
 
-  describe "find_winning_combination/2" do
-    test "returns winning combination when player wins horizontally" do
-      player = Player.build("Player1", "X")
+  @horizontal_wins [[:sq11, :sq12, :sq13], [:sq21, :sq22, :sq23], [:sq31, :sq32, :sq33]]
+  @vertical_wins [[:sq11, :sq21, :sq31], [:sq12, :sq22, :sq32], [:sq13, :sq23, :sq33]]
+  @diagonal_wins [[:sq11, :sq22, :sq33], [:sq13, :sq22, :sq31]]
 
-      game = %Tictac{
-        board: [
-          %Square{letter: "X", name: :sq11},
-          %Square{letter: "X", name: :sq12},
-          %Square{letter: "X", name: :sq13},
-          %Square{name: :sq21},
-          %Square{name: :sq22},
-          %Square{name: :sq23},
-          %Square{name: :sq31},
-          %Square{name: :sq32},
-          %Square{name: :sq33}
-        ],
-        players: [player]
-      }
+  setup do
+    player = Player.build("Player1", "X")
+    game = %Tictac{players: [player]}
+    {:ok, player: player, game: game}
+  end
 
-      assert [:sq11, :sq12, :sq13] == Tictac.find_winning_combination(player, game)
+  for horizontal_win <- @horizontal_wins do
+    description = "returns #{Enum.join(horizontal_win, ", ")} when player wins horizontally"
+
+    test description, %{player: player, game: game} do
+      assert_winning_combination(player, game, unquote(horizontal_win))
     end
+  end
 
-    test "returns winning combination when player wins vertically" do
-      player = Player.build("Player1", "X")
+  for vertical_win <- @vertical_wins do
+    description = "returns #{Enum.join(vertical_win, ", ")} when player wins vertically"
 
-      game = %Tictac{
-        board: [
-          %Square{letter: "X", name: :sq11},
-          %Square{letter: "X", name: :sq21},
-          %Square{letter: "X", name: :sq31},
-          %Square{name: :sq12},
-          %Square{name: :sq22},
-          %Square{name: :sq32},
-          %Square{name: :sq13},
-          %Square{name: :sq23},
-          %Square{name: :sq33}
-        ],
-        players: [player]
-      }
-
-      assert [:sq11, :sq21, :sq31] == Tictac.find_winning_combination(player, game)
+    test description, %{player: player, game: game} do
+      assert_winning_combination(player, game, unquote(vertical_win))
     end
+  end
 
-    test "returns winning combination when player wins diagonally" do
-      player = Player.build("Player1", "X")
+  for diagonal_win <- @diagonal_wins do
+    description = "returns #{Enum.join(diagonal_win, ", ")} when player wins diagonally"
 
-      game = %Tictac{
-        board: [
-          %Square{letter: "X", name: :sq11},
-          %Square{letter: "X", name: :sq22},
-          %Square{letter: "X", name: :sq33},
-          %Square{name: :sq12},
-          %Square{name: :sq21},
-          %Square{name: :sq23},
-          %Square{name: :sq13},
-          %Square{name: :sq32},
-          %Square{name: :sq31}
-        ],
-        players: [player]
-      }
-
-      assert [:sq11, :sq22, :sq33] == Tictac.find_winning_combination(player, game)
+    test description, %{player: player, game: game} do
+      assert_winning_combination(player, game, unquote(diagonal_win))
     end
+  end
 
-    test "returns :not_found when no winning combination" do
-      player = Player.build("Player1", "X")
+  test "returns :not_found when no winning combination", %{player: player, game: game} do
+    updated_game = Map.update!(game, :board, fn _ -> [] end)
+    assert Tictac.find_winning_combination(player, updated_game) == :not_found
+  end
 
-      game = %Tictac{
-        board: [
-          %Square{letter: "X", name: :sq11},
-          %Square{letter: "O", name: :sq12},
-          %Square{letter: "O", name: :sq13},
-          %Square{letter: "O", name: :sq21},
-          %Square{letter: "X", name: :sq22},
-          %Square{letter: "O", name: :sq23},
-          %Square{letter: "X", name: :sq31},
-          %Square{letter: "X", name: :sq32},
-          %Square{letter: "O", name: :sq33}
-        ],
-        players: [player]
-      }
+  defp assert_winning_combination(player, game, win_combination) do
+    squares = Enum.map(win_combination, &%Square{letter: "X", name: &1})
+    updated_game = Map.update!(game, :board, fn _ -> squares end)
 
-      assert :not_found == Tictac.find_winning_combination(player, game)
-    end
+    assert Tictac.find_winning_combination(player, updated_game) == win_combination
   end
 end
