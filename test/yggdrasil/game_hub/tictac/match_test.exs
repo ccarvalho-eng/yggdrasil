@@ -1,10 +1,9 @@
-defmodule Yggdrasil.GameHub.TictacTest do
+defmodule Yggdrasil.GameHub.Tictac.MatchTest do
   use ExUnit.Case
 
-  alias Yggdrasil.GameHub.Tictac
-  alias Yggdrasil.GameHub.Tictac.{Player, Square}
+  alias Yggdrasil.GameHub.Tictac.{Match, Player, Square}
 
-  doctest Tictac
+  doctest Match
 
   @horizontal_wins [[:sq11, :sq12, :sq13], [:sq21, :sq22, :sq23], [:sq31, :sq32, :sq33]]
   @vertical_wins [[:sq11, :sq21, :sq31], [:sq12, :sq22, :sq32], [:sq13, :sq23, :sq33]]
@@ -12,7 +11,7 @@ defmodule Yggdrasil.GameHub.TictacTest do
 
   setup do
     player = Player.build("Player1", "X")
-    game = %Tictac{players: [player]}
+    game = %Match{players: [player]}
     {:ok, player: player, game: game}
   end
 
@@ -42,13 +41,13 @@ defmodule Yggdrasil.GameHub.TictacTest do
 
   test "returns :not_found when no winning combination", %{player: player, game: game} do
     updated_game = Map.update!(game, :board, fn _ -> [] end)
-    assert Tictac.find_winning_combination(player, updated_game) == :not_found
+    assert Match.find_winning_combination(player, updated_game) == :not_found
   end
 
   defp assert_winning_combination(player, game, win_combination) do
     squares = Enum.map(win_combination, &%Square{letter: "X", name: &1})
     updated_game = Map.update!(game, :board, fn _ -> squares end)
 
-    assert Tictac.find_winning_combination(player, updated_game) == win_combination
+    assert Match.find_winning_combination(player, updated_game) == win_combination
   end
 end

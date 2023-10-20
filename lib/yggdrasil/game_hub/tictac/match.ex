@@ -1,4 +1,4 @@
-defmodule Yggdrasil.GameHub.Tictac do
+defmodule Yggdrasil.GameHub.Tictac.Match do
   @moduledoc """
   Module for managing the state of a Tic-Tac-Toe game.
   """
@@ -37,9 +37,9 @@ defmodule Yggdrasil.GameHub.Tictac do
   ## Examples
 
       iex> alias Yggdrasil.GameHub.Tictac.Square
-      iex> alias Yggdrasil.GameHub.Tictac
-      iex> Tictac.init()
-      %Tictac{
+      iex> alias Yggdrasil.GameHub.Tictac.Match
+      iex> Match.init()
+      %Match{
         board: [
           %Square{letter: nil, name: :sq11},
           %Square{letter: nil, name: :sq12},
@@ -68,9 +68,9 @@ defmodule Yggdrasil.GameHub.Tictac do
 
   ## Examples
 
-      iex> alias Yggdrasil.GameHub.Tictac
-      iex> game = Tictac.init()
-      iex> Tictac.get_open_squares(game)
+      iex> alias Yggdrasil.GameHub.Tictac.Match
+      iex> game = Match.init()
+      iex> Match.get_open_squares(game)
       [:sq33, :sq32, :sq31, :sq23, :sq22, :sq21, :sq13, :sq12, :sq11]
 
   """
@@ -114,8 +114,8 @@ defmodule Yggdrasil.GameHub.Tictac do
   ## Examples
 
       iex> alias Yggdrasil.GameHub.Tictac.Square
-      iex> alias Yggdrasil.GameHub.Tictac
-      iex> game = %Tictac{
+      iex> alias Yggdrasil.GameHub.Tictac.Match
+      iex> game = %Match{
       ...>   board: [
       ...>     %Square{letter: "X", name: :sq11},
       ...>     %Square{letter: "X", name: :sq12},
@@ -133,7 +133,7 @@ defmodule Yggdrasil.GameHub.Tictac do
       ...>     %Player{letter: "O", name: "Kristoff"}
       ...>   ]
       ...> }
-      iex> Tictac.game_over?(game)
+      iex> Match.game_over?(game)
       true
 
   """
