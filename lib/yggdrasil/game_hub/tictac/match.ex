@@ -67,6 +67,65 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   end
 
   @doc """
+  Adds a player to a match.
+
+  - Can't add a player if the match wasn't initialized by another player.
+  - Only two players are allowed in the match.
+
+  ## Examples
+
+      iex> alias Yggdrasil.GameHub.Tictac.{Match, Player, Square}
+      iex> player_1 = Player.build("Kristoff", "X")
+      iex> player_2 = Player.build("Larah", "O")
+      iex> match = Match.init(player_1)
+      iex> Match.join(match, player_2)
+      {:ok,
+        %Match{
+          status: nil,
+          board: [
+            %Square{letter: nil, name: :sq11},
+            %Square{letter: nil, name: :sq12},
+            %Square{letter: nil, name: :sq13},
+            %Square{letter: nil, name: :sq21},
+            %Square{letter: nil, name: :sq22},
+            %Square{letter: nil, name: :sq23},
+            %Square{letter: nil, name: :sq31},
+            %Square{letter: nil, name: :sq32},
+            %Square{letter: nil, name: :sq33}
+          ],
+          player_turn: nil,
+          players: [
+            %Player{letter: "X", name: "Kristoff"},
+            %Player{letter: "O", name: "Larah"}
+          ]
+        }
+      }
+      iex> match = %Match{players: []}
+      iex> Match.join(match, player_2)
+      {:error, "You can only join a pre-existing game."}
+      iex> match = %Match{players: [player_1, player_2]}
+      iex> player_3 = Player.build("Ruth", "X")
+      iex> Match.join(match, player_3)
+      {:error, "Only two players are permitted."}
+
+  """
+  @spec join(t(), Player.t()) :: {:error, term()}
+  def join(%__MODULE__{players: []}, _player),
+    do: {:error, "You can only join a pre-existing game."}
+
+  def join(%__MODULE__{players: [_player_1, _player_2]}, _player_3),
+    do: {:error, "Only two players are permitted."}
+
+  def join(%__MODULE__{players: [%{letter: l} = player_1]} = match, %{letter: l} = player_2) do
+    player_2 = %Player{player_2 | letter: swap_letter(player_2)}
+    {:ok, %__MODULE__{match | players: [player_1, player_2]}}
+  end
+
+  def join(%__MODULE__{players: [player_1]} = match, player_2) do
+    {:ok, %__MODULE__{match | players: [player_1, player_2]}}
+  end
+
+  @doc """
   Returns a list of valid moves representing squares on the game board.
 
   This function calculates and returns a list of squares that are valid moves based on the current game state.
@@ -176,4 +235,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
       _ -> false
     end
   end
+
+  defp swap_letter(%Player{letter: "O"}), do: "X"
+  defp swap_letter(_), do: "O"
 end
