@@ -39,9 +39,9 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
 
   ## Examples
 
-      iex> alias Yggdrasil.GameHub.Tictac.Square
-      iex> alias Yggdrasil.GameHub.Tictac.Match
-      iex> Match.init()
+      iex> alias Yggdrasil.GameHub.Tictac.{Match, Player, Square}
+      iex> player = Player.build("Kristoff", "X")
+      iex> Match.init(player)
       %Match{
         board: [
           %Square{letter: nil, name: :sq11},
@@ -55,13 +55,13 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
           %Square{letter: nil, name: :sq33}
         ],
         player_turn: nil,
-        players: []
+        players: [player]
       }
 
   """
-  @spec init() :: t()
-  def init do
-    struct(__MODULE__, %{players: [], player_turn: nil, board: build_board()})
+  @spec init(Player.t()) :: t()
+  def init(player) do
+    struct(__MODULE__, %{players: [player], player_turn: nil, board: build_board()})
   end
 
   @doc """
@@ -71,8 +71,9 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
 
   ## Examples
 
-      iex> alias Yggdrasil.GameHub.Tictac.Match
-      iex> game = Match.init()
+      iex> alias Yggdrasil.GameHub.Tictac.{Match, Player}
+      iex> player = Player.build("Kristoff", "X")
+      iex> game = Match.init(player)
       iex> Match.get_open_squares(game)
       [:sq33, :sq32, :sq31, :sq23, :sq22, :sq21, :sq13, :sq12, :sq11]
 
