@@ -76,7 +76,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
 
       iex> alias Yggdrasil.GameHub.Tictac.{Match, Player, Square}
       iex> player_1 = Player.build("Kristoff", "X")
-      iex> player_2 = Player.build("Larah", "O")
+      iex> player_2 = Player.build("Larah", "X")
       iex> match = Match.init(player_1)
       iex> Match.join(match, player_2)
       {:ok,
