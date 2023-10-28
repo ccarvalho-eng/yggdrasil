@@ -25,10 +25,13 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
     [:sq13, :sq22, :sq31]
   ]
 
+  defmodule Status, do: @type(t :: :not_started | :playing | :done)
+
   typedstruct do
     field(:players, [Player.t()])
     field(:player_turn, integer() | nil)
     field(:board, [Square.t()])
+    field(:status, Status.t())
   end
 
   @doc """
