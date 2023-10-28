@@ -37,6 +37,8 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   @doc """
   Initializes a new game of Tic-Tac-Toe.
 
+  Requires at least one player.
+
   ## Examples
 
       iex> alias Yggdrasil.GameHub.Tictac.{Match, Player, Square}
