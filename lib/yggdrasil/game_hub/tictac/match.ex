@@ -267,15 +267,30 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
 
   """
   @spec is_match_over?(t()) :: boolean()
-  def is_match_over?(match) do
-    a_player_won = did_any_player_win?(match)
-    no_open_squares = match |> get_open_squares() |> Enum.empty?()
+  def is_match_over?(match), do: did_any_player_win?(match) || draw?(match)
 
-    a_player_won || no_open_squares
+  @doc """
+  Returns the match's result.
+  """
+  @spec result(t()) :: :draw | :playing | Player.t()
+  def result(%__MODULE__{players: [player_1, player_2]} = match) do
+    cond do
+      did_player_win?(match, player_1) -> player_1
+      did_player_win?(match, player_2) -> player_2
+      draw?(match) -> :draw
+      true -> :playing
+    end
   end
 
   defp build_board do
     for row <- @row_range, col <- @col_range, do: Square.build(:"sq#{row}#{col}")
+  end
+
+  defp did_player_win?(match, player) do
+    case find_winning_combination(player, match) do
+      [_, _, _] -> true
+      _ -> false
+    end
   end
 
   defp did_player_win?(match, player, combination) do
@@ -299,6 +314,8 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
       _ -> false
     end
   end
+
+  defp draw?(match), do: match |> get_open_squares() |> Enum.empty?()
 
   defp swap_letter(%Player{letter: "O"}), do: "X"
   defp swap_letter(_), do: "O"
