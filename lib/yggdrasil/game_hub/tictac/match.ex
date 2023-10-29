@@ -36,7 +36,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
     field(:players, [Player.t()])
     field(:player_turn, integer() | nil)
     field(:board, [Square.t()])
-    field(:status, Status.t())
+    field(:status, Status.t(), default: :not_started)
   end
 
   @doc """
@@ -62,7 +62,8 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
           %Square{letter: nil, name: :sq33}
         ],
         player_turn: nil,
-        players: [player]
+        players: [player],
+        status: :not_started
       }
 
   """
@@ -86,7 +87,6 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
       iex> Match.join(match, player_2)
       {:ok,
         %Match{
-          status: nil,
           board: [
             %Square{letter: nil, name: :sq11},
             %Square{letter: nil, name: :sq12},
@@ -102,12 +102,13 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
           players: [
             %Player{letter: "X", name: "Kristoff"},
             %Player{letter: "O", name: "Larah"}
-          ]
+          ],
+          status: :not_started
         }
       }
       iex> match = %Match{players: []}
       iex> Match.join(match, player_2)
-      {:error, "You can only join a pre-existing game."}
+      {:error, "You can only join a pre-existing match."}
       iex> match = %Match{players: [player_1, player_2]}
       iex> player_3 = Player.build("Ruth", "X")
       iex> Match.join(match, player_3)
@@ -116,7 +117,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   """
   @spec join(t(), Player.t()) :: {:error, term()}
   def join(%__MODULE__{players: []}, _player),
-    do: {:error, "You can only join a pre-existing game."}
+    do: {:error, "You can only join a pre-existing match."}
 
   def join(%__MODULE__{players: [_player_1, _player_2]}, _player_3),
     do: {:error, "Only two players are permitted."}
@@ -131,6 +132,45 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   end
 
   @doc """
+  Begins a match if it's not already started or completed.
+
+  ## Examples
+
+      iex> alias Yggdrasil.GameHub.Tictac.{Match, Player}
+      iex> match = %Match{status: :playing}
+      iex> Match.begin(match)
+      {:error, "The match is already in progress."}
+      iex> match = %Match{status: :done}
+      iex> Match.begin(match)
+      {:error, "The match is already over."}
+      iex> player_1 = Player.build("Kristoff", "X")
+      iex> player_2 = Player.build("Larah", "O")
+      iex> match = %Match{status: :not_started, players: [player_1, player_2]}
+      iex> Match.begin(match)
+      {:ok,
+        %Match{
+          status: :playing,
+          board: nil,
+          player_turn: "O",
+          players: [
+            %Player{letter: "X", name: "Kristoff"},
+            %Player{letter: "O", name: "Larah"}
+          ]
+        }
+      }
+
+  """
+  @spec begin(t()) :: {:error, term()} | {:ok, Match.t()}
+  def begin(%__MODULE__{status: :playing}), do: {:error, "The match is already in progress."}
+  def begin(%__MODULE__{status: :done}), do: {:error, "The match is already over."}
+
+  def begin(%__MODULE__{status: :not_started, players: [_player_1, _player_2]} = match) do
+    {:ok, %__MODULE__{match | status: :playing, player_turn: "O"}}
+  end
+
+  def begin(_), do: {:error, "Not enough players for the match."}
+
+  @doc """
   Returns a list of valid moves representing squares on the game board.
 
   This function calculates and returns a list of squares that are valid moves based on the current game state.
@@ -139,8 +179,8 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
 
       iex> alias Yggdrasil.GameHub.Tictac.{Match, Player}
       iex> player = Player.build("Kristoff", "X")
-      iex> game = Match.init(player)
-      iex> Match.get_open_squares(game)
+      iex> match = Match.init(player)
+      iex> Match.get_open_squares(match)
       [:sq33, :sq32, :sq31, :sq23, :sq22, :sq21, :sq13, :sq12, :sq11]
 
   """
