@@ -171,6 +171,25 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   def begin(_), do: {:error, "Not enough players for the match."}
 
   @doc """
+  Returns true if it's the player's turn.
+
+  ## Examples
+
+      iex> alias Yggdrasil.GameHub.Tictac.{Match, Player}
+      iex> match = %Match{player_turn: "X"}
+      iex> player_1 = Player.build("Kristoff", "X")
+      iex> player_2 = Player.build("Larah", "O")
+      iex> Match.is_player_turn?(match, player_1)
+      true
+      iex> Match.is_player_turn?(match, player_2)
+      false
+
+  """
+  @spec is_player_turn?(t(), Player.t()) :: boolean()
+  def is_player_turn?(%__MODULE__{player_turn: letter}, %Player{letter: letter}), do: true
+  def is_player_turn?(_, _), do: false
+
+  @doc """
   Returns a list of valid moves representing squares on the game board.
 
   This function calculates and returns a list of squares that are valid moves based on the current game state.
