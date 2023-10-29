@@ -262,12 +262,12 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
       ...>     %Player{letter: "O", name: "Kristoff"}
       ...>   ]
       ...> }
-      iex> Match.match_over?(match)
+      iex> Match.is_match_over?(match)
       true
 
   """
-  @spec match_over?(t()) :: boolean()
-  def match_over?(match) do
+  @spec is_match_over?(t()) :: boolean()
+  def is_match_over?(match) do
     a_player_won = did_any_player_win?(match)
     no_open_squares = match |> get_open_squares() |> Enum.empty?()
 
