@@ -34,7 +34,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
 
   typedstruct do
     field(:players, [Player.t()])
-    field(:player_turn, integer() | nil)
+    field(:player_turn, binary())
     field(:board, [Square.t()])
     field(:status, Status.t(), default: :not_started)
   end
@@ -282,6 +282,18 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
     end
   end
 
+  @spec play(t(), Player.t(), Square.t()) :: t()
+  def play(%__MODULE__{} = match, player, square), do: play(match, player, square)
+
+  def play(match, player, square) do
+    match
+    |> validate_player_turn(player)
+    |> validate_square(square)
+    |> put_letter(player, square)
+    |> check_match_status()
+    |> next_player_turn()
+  end
+
   defp build_board do
     for row <- @row_range, col <- @col_range, do: Square.build(:"sq#{row}#{col}")
   end
@@ -319,4 +331,44 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
 
   defp swap_letter(%Player{letter: "O"}), do: "X"
   defp swap_letter(_), do: "O"
+
+  defp validate_player_turn(match, player) do
+    if is_player_turn?(match, player), do: {:ok, match}, else: {:error, "Not player's turn."}
+  end
+
+  defp validate_square({:ok, %__MODULE__{} = match}, square) do
+    if Square.is_open?(square), do: {:ok, match}, else: {:error, "Square is not open."}
+  end
+
+  defp validate_square(error, _), do: error
+
+  defp put_letter({:ok, %__MODULE__{} = match}, player, square) do
+    updated_board = Enum.map(match.board, &update_square(&1, square.name, player))
+
+    %__MODULE__{match | board: updated_board}
+  end
+
+  defp update_square(%Square{name: square_name} = sq, square_name, player),
+    do: %Square{sq | letter: player.letter}
+
+  defp update_square(sq, _, _),
+    do: sq
+
+  defp check_match_status(%__MODULE__{} = match) do
+    case result(match) do
+      :playing ->
+        match
+
+      _ ->
+        %__MODULE__{match | status: :done}
+    end
+  end
+
+  defp next_player_turn(%__MODULE__{player_turn: "X"} = match) do
+    %__MODULE__{match | player_turn: "O"}
+  end
+
+  defp next_player_turn(%__MODULE__{player_turn: "O"} = match) do
+    %__MODULE__{match | player_turn: "X"}
+  end
 end
