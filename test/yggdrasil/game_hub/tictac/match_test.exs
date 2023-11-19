@@ -21,7 +21,7 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
       description = "returns #{Enum.join(horizontal_win, ", ")} when player wins horizontally"
 
       test description, %{player: player, match: match} do
-        assert_winning_combination(player, match, unquote(horizontal_win))
+        assert_winning_combination(match, player, unquote(horizontal_win))
       end
     end
 
@@ -29,7 +29,7 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
       description = "returns #{Enum.join(vertical_win, ", ")} when player wins vertically"
 
       test description, %{player: player, match: match} do
-        assert_winning_combination(player, match, unquote(vertical_win))
+        assert_winning_combination(match, player, unquote(vertical_win))
       end
     end
 
@@ -37,20 +37,13 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
       description = "returns #{Enum.join(diagonal_win, ", ")} when player wins diagonally"
 
       test description, %{player: player, match: match} do
-        assert_winning_combination(player, match, unquote(diagonal_win))
+        assert_winning_combination(match, player, unquote(diagonal_win))
       end
     end
 
     test "returns :not_found when no winning combination", %{player: player, match: match} do
       updated_match = Map.update!(match, :board, fn _ -> [] end)
       assert Match.find_winning_combination(updated_match, player) == :not_found
-    end
-
-    defp assert_winning_combination(player, match, win_combination) do
-      squares = Enum.map(win_combination, &%Square{letter: "X", name: &1})
-      updated_match = Map.update!(match, :board, fn _ -> squares end)
-
-      assert Match.find_winning_combination(updated_match, player) == win_combination
     end
   end
 
@@ -92,5 +85,12 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
     test "returns `:playing` if match is not over", %{match: match} do
       assert Match.result(match) == :playing
     end
+  end
+
+  defp assert_winning_combination(match, player, win_combination) do
+    squares = Enum.map(win_combination, &%Square{letter: "X", name: &1})
+    updated_match = Map.update!(match, :board, fn _ -> squares end)
+
+    assert Match.find_winning_combination(updated_match, player) == win_combination
   end
 end
