@@ -13,44 +13,44 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
   describe "find_winning_combinations/2" do
     setup do
       player = Player.build("Kristoff", "X")
-      game = %Match{players: [player]}
-      {:ok, player: player, game: game}
+      match = %Match{players: [player]}
+      {:ok, player: player, match: match}
     end
 
     for horizontal_win <- @horizontal_wins do
       description = "returns #{Enum.join(horizontal_win, ", ")} when player wins horizontally"
 
-      test description, %{player: player, game: game} do
-        assert_winning_combination(player, game, unquote(horizontal_win))
+      test description, %{player: player, match: match} do
+        assert_winning_combination(player, match, unquote(horizontal_win))
       end
     end
 
     for vertical_win <- @vertical_wins do
       description = "returns #{Enum.join(vertical_win, ", ")} when player wins vertically"
 
-      test description, %{player: player, game: game} do
-        assert_winning_combination(player, game, unquote(vertical_win))
+      test description, %{player: player, match: match} do
+        assert_winning_combination(player, match, unquote(vertical_win))
       end
     end
 
     for diagonal_win <- @diagonal_wins do
       description = "returns #{Enum.join(diagonal_win, ", ")} when player wins diagonally"
 
-      test description, %{player: player, game: game} do
-        assert_winning_combination(player, game, unquote(diagonal_win))
+      test description, %{player: player, match: match} do
+        assert_winning_combination(player, match, unquote(diagonal_win))
       end
     end
 
-    test "returns :not_found when no winning combination", %{player: player, game: game} do
-      updated_game = Map.update!(game, :board, fn _ -> [] end)
-      assert Match.find_winning_combination(player, updated_game) == :not_found
+    test "returns :not_found when no winning combination", %{player: player, match: match} do
+      updated_match = Map.update!(match, :board, fn _ -> [] end)
+      assert Match.find_winning_combination(updated_match, player) == :not_found
     end
 
-    defp assert_winning_combination(player, game, win_combination) do
+    defp assert_winning_combination(player, match, win_combination) do
       squares = Enum.map(win_combination, &%Square{letter: "X", name: &1})
-      updated_game = Map.update!(game, :board, fn _ -> squares end)
+      updated_match = Map.update!(match, :board, fn _ -> squares end)
 
-      assert Match.find_winning_combination(player, updated_game) == win_combination
+      assert Match.find_winning_combination(updated_match, player) == win_combination
     end
   end
 

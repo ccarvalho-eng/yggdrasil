@@ -215,8 +215,8 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
 
   ## Parameters
 
-  - `player`: The player for whom the winning combination is sought.
   - `match`: The state of the Tic-Tac-Toe match.
+  - `player`: The player for whom the winning combination is sought.
 
   ## Returns
 
@@ -224,8 +224,8 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   - `:not_found` if no winning combination is found.
 
   """
-  @spec find_winning_combination(Player.t(), t()) :: list(atom()) | :not_found
-  def find_winning_combination(player, match) do
+  @spec find_winning_combination(t(), Player.t()) :: list(atom()) | :not_found
+  def find_winning_combination(match, player) do
     case Enum.find(@winning_combinations, &did_player_win?(match, player, &1)) do
       nil -> :not_found
       combination -> combination
@@ -299,7 +299,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   end
 
   defp did_player_win?(match, player) do
-    case find_winning_combination(player, match) do
+    case find_winning_combination(match, player) do
       [_, _, _] -> true
       _ -> false
     end
@@ -313,7 +313,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
 
   defp did_any_player_win?(match) do
     Enum.any?(match.players, fn player ->
-      case find_winning_combination(player, match) do
+      case find_winning_combination(match, player) do
         :not_found -> false
         [_, _, _] -> true
       end
