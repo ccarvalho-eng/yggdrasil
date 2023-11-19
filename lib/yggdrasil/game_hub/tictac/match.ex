@@ -283,7 +283,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   end
 
   @spec play(t(), Player.t(), Square.t()) :: t()
-  def play(%__MODULE__{} = match, player, square), do: play(match, player, square)
+  def play({:ok, %__MODULE__{} = match}, player, square), do: play(match, player, square)
 
   def play(match, player, square) do
     match

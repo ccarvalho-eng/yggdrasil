@@ -87,6 +87,9 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
     end
   end
 
+  describe "play/3" do
+  end
+
   defp assert_winning_combination(match, player, win_combination) do
     squares = Enum.map(win_combination, &%Square{letter: "X", name: &1})
     updated_match = Map.update!(match, :board, fn _ -> squares end)
