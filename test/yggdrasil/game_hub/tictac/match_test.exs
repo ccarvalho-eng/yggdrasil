@@ -10,10 +10,16 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
   @diagonal_wins [[:sq11, :sq22, :sq33], [:sq13, :sq22, :sq31]]
   @random_win Enum.random(@horizontal_wins ++ @vertical_wins ++ @diagonal_wins)
 
+  setup do
+    player_1 = Player.build("Kristoff", "X")
+    player_2 = Player.build("Larah", "O")
+
+    {:ok, match} = player_1 |> Match.init() |> Match.join(player_2)
+    {:ok, match: match, player_1: player_1, player_2: player_2}
+  end
+
   describe "find_winning_combinations/2" do
-    setup do
-      player = Player.build("Kristoff", "X")
-      match = %Match{players: [player]}
+    setup %{match: match, player_1: player} do
       {:ok, player: player, match: match}
     end
 
@@ -48,14 +54,6 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
   end
 
   describe "result/2" do
-    setup do
-      player_1 = Player.build("Kristoff", "X")
-      player_2 = Player.build("Larah", "O")
-
-      {:ok, match} = player_1 |> Match.init() |> Match.join(player_2)
-      {:ok, match: match, player_1: player_1, player_2: player_2}
-    end
-
     test "returns match winner", %{match: match, player_1: player_1, player_2: player_2} do
       for player <- [player_1, player_2] do
         winning_combination = Enum.map(@random_win, &%Square{letter: player.letter, name: &1})
@@ -88,6 +86,45 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
   end
 
   describe "play/3" do
+    test "returns error when it's not the player's turn", %{
+      player_1: player_1,
+      player_2: player_2
+    } do
+      match = %Match{player_turn: player_2.letter}
+      square = %Square{}
+
+      assert Match.play(match, player_1, square) == {:error, "Not player's turn."}
+    end
+
+    test "returns error when square is not open", %{player_1: player} do
+      match = %Match{player_turn: player.letter}
+      square = %Square{letter: "X", name: :sq11}
+
+      assert Match.play(match, player, square) == {:error, "Square is not open."}
+    end
+
+    test "updates board with player's letter", %{player_1: player_1, player_2: player_2} do
+      match = %Match{
+        player_turn: player_1.letter,
+        board: [%Square{letter: nil, name: :sq11}],
+        players: [player_1, player_2]
+      }
+
+      player_2_letter = player_2.letter
+      square = %Square{letter: nil, name: :sq11}
+
+      assert {
+               :ok,
+               %Match{
+                 board: [%Square{letter: "X", name: :sq11}],
+                 player_turn: ^player_2_letter,
+                 players: [
+                   %Player{letter: "X", name: "Kristoff"},
+                   %Player{letter: "O", name: "Larah"}
+                 ]
+               }
+             } = Match.play(match, player_1, square)
+    end
   end
 
   defp assert_winning_combination(match, player, win_combination) do

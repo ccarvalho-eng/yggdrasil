@@ -282,7 +282,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
     end
   end
 
-  @spec play(t(), Player.t(), Square.t()) :: t()
+  @spec play(t(), Player.t(), Square.t()) :: {:ok, t()} | {:error, term()}
   def play({:ok, %__MODULE__{} = match}, player, square), do: play(match, player, square)
 
   def play(match, player, square) do
@@ -345,8 +345,10 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   defp put_letter({:ok, %__MODULE__{} = match}, player, square) do
     updated_board = Enum.map(match.board, &update_square(&1, square.name, player))
 
-    %__MODULE__{match | board: updated_board}
+    {:ok, %__MODULE__{match | board: updated_board}}
   end
+
+  defp put_letter(error, _, _), do: error
 
   defp update_square(%Square{name: square_name} = sq, square_name, player),
     do: %Square{sq | letter: player.letter}
@@ -354,21 +356,25 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   defp update_square(sq, _, _),
     do: sq
 
-  defp check_match_status(%__MODULE__{} = match) do
+  defp check_match_status({:ok, %__MODULE__{} = match}) do
     case result(match) do
       :playing ->
-        match
+        {:ok, match}
 
       _ ->
-        %__MODULE__{match | status: :done}
+        {:ok, %__MODULE__{match | status: :done}}
     end
   end
 
-  defp next_player_turn(%__MODULE__{player_turn: "X"} = match) do
-    %__MODULE__{match | player_turn: "O"}
+  defp check_match_status(error), do: error
+
+  defp next_player_turn({:ok, %__MODULE__{player_turn: "X"} = match}) do
+    {:ok, %__MODULE__{match | player_turn: "O"}}
   end
 
-  defp next_player_turn(%__MODULE__{player_turn: "O"} = match) do
-    %__MODULE__{match | player_turn: "X"}
+  defp next_player_turn({:ok, %__MODULE__{player_turn: "O"} = match}) do
+    {:ok, %__MODULE__{match | player_turn: "X"}}
   end
+
+  defp next_player_turn(error), do: error
 end
