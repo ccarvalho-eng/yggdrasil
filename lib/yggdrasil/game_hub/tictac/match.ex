@@ -115,7 +115,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
       {:error, "Only two players are permitted."}
 
   """
-  @spec join(t(), Player.t()) :: {:error, term()}
+  @spec join(t(), Player.t()) :: {:error, String.t()}
   def join(%__MODULE__{players: []}, _player),
     do: {:error, "You can only join a pre-existing match."}
 
@@ -160,7 +160,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
       }
 
   """
-  @spec begin(t()) :: {:error, term()} | {:ok, t()}
+  @spec begin(t()) :: {:error, String.t()} | {:ok, t()}
   def begin(%__MODULE__{status: :playing}), do: {:error, "The match is already in progress."}
   def begin(%__MODULE__{status: :done}), do: {:error, "The match is already over."}
 
@@ -282,7 +282,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
     end
   end
 
-  @spec play(t(), Player.t(), Square.t()) :: {:ok, t()} | {:error, term()}
+  @spec play(t(), Player.t(), Square.t()) :: {:ok, t()} | {:error, String.t()}
   def play({:ok, %__MODULE__{} = match}, player, square), do: play(match, player, square)
 
   def play(match, player, square) do
