@@ -171,6 +171,21 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   def begin(_), do: {:error, "Not enough players for the match."}
 
   @doc """
+  Gets a square by its name.
+  """
+  @spec get_square(t(), String.t()) :: {:ok, %Square{}} | {:error, String.t()}
+  def get_square(%__MODULE__{board: [%{name: square_name} = square | _]}, square_name) do
+    {:ok, square}
+  end
+
+  def get_square(%__MODULE__{board: [_ | squares]} = match, square_name) do
+    match = %__MODULE__{match | board: squares}
+    get_square(match, square_name)
+  end
+
+  def get_square(_, _), do: {:error, "Square not found."}
+
+  @doc """
   Returns true if it's the player's turn.
 
   ## Examples

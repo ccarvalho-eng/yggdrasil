@@ -18,7 +18,7 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
     {:ok, match: match, player_1: player_1, player_2: player_2}
   end
 
-  describe "find_winning_combinations/2" do
+  describe "get_winning_combinations/2" do
     setup %{match: match, player_1: player} do
       {:ok, player: player, match: match}
     end
@@ -124,6 +124,19 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
                  ]
                }
              } = Match.play(match, player_1, square)
+    end
+  end
+
+  describe "get_square/2" do
+    test "returns square with valid name", %{match: match} do
+      assert {:ok, %Square{name: :sq11}} = Match.get_square(match, :sq11)
+      assert {:ok, %Square{name: :sq22}} = Match.get_square(match, :sq22)
+      assert {:ok, %Square{name: :sq33}} = Match.get_square(match, :sq33)
+    end
+
+    test "returns error when square name doesn't exist", %{match: match} do
+      assert {:error, "Square not found."} = Match.get_square(match, :sq00)
+      assert {:error, "Square not found."} = Match.get_square(match, :invalid)
     end
   end
 
