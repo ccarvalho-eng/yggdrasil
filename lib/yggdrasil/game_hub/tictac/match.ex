@@ -173,7 +173,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   @doc """
   Gets a square by its name.
   """
-  @spec get_square(t(), String.t()) :: {:ok, %Square{}} | {:error, String.t()}
+  @spec get_square(t(), String.t()) :: {:ok, Square.t()} | {:error, String.t()}
   def get_square(%__MODULE__{board: [%{name: square_name} = square | _]}, square_name) do
     {:ok, square}
   end
