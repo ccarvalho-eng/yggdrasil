@@ -96,34 +96,49 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
       assert Match.play(match, player_1, square) == {:error, "Not player's turn."}
     end
 
-    test "returns error when square is not open", %{player_1: player} do
+    test "returns error when square is not found", %{player_1: player} do
       match = %Match{player_turn: player.letter}
-      square = %Square{letter: "X", name: :sq11}
 
-      assert Match.play(match, player, square) == {:error, "Square is not open."}
+      assert Match.play(match, player, :sq11) == {:error, "Square not found."}
     end
 
-    test "updates board with player's letter", %{player_1: player_1, player_2: player_2} do
-      match = %Match{
-        player_turn: player_1.letter,
-        board: [%Square{letter: nil, name: :sq11}],
-        players: [player_1, player_2]
-      }
-
+    test "updates board with player's letter", %{
+      match: match,
+      player_1: player_1,
+      player_2: player_2
+    } do
+      match = %Match{match | player_turn: player_1.letter}
       player_2_letter = player_2.letter
-      square = %Square{letter: nil, name: :sq11}
 
       assert {
                :ok,
                %Match{
-                 board: [%Square{letter: "X", name: :sq11}],
+                 board: [%Square{letter: "X", name: :sq11} | _],
                  player_turn: ^player_2_letter,
                  players: [
                    %Player{letter: "X", name: "Kristoff"},
                    %Player{letter: "O", name: "Larah"}
                  ]
                }
-             } = Match.play(match, player_1, square)
+             } = Match.play(match, player_1, :sq11)
+    end
+
+    test "returns error when square is already taken", %{
+      match: match,
+      player_1: player_1
+    } do
+      updated_board =
+        Enum.map(match.board, fn
+          %Square{letter: nil, name: :sq11} ->
+            %Square{letter: "X", name: :sq11}
+
+          other ->
+            other
+        end)
+
+      match = %Match{match | player_turn: player_1.letter, board: updated_board}
+
+      assert Match.play(match, player_1, :sq11) == {:error, "Square is already taken."}
     end
   end
 

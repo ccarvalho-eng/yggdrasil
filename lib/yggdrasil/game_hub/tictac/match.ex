@@ -352,13 +352,17 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   end
 
   defp validate_square({:ok, %__MODULE__{} = match}, square) do
-    if Square.is_open?(square), do: {:ok, match}, else: {:error, "Square is not open."}
+    case get_square(match, square) do
+      {:ok, %Square{letter: nil}} -> {:ok, match}
+      {:ok, %Square{}} -> {:error, "Square is already taken."}
+      {:error, _reason} = error -> error
+    end
   end
 
   defp validate_square(error, _), do: error
 
   defp put_letter({:ok, %__MODULE__{} = match}, player, square) do
-    updated_board = Enum.map(match.board, &update_square(&1, square.name, player))
+    updated_board = Enum.map(match.board, &update_square(&1, square, player))
 
     {:ok, %__MODULE__{match | board: updated_board}}
   end
