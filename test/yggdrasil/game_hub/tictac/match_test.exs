@@ -91,9 +91,8 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
       player_2: player_2
     } do
       match = %Match{player_turn: player_2.letter}
-      square = %Square{}
 
-      assert Match.play(match, player_1, square) == {:error, "Not player's turn."}
+      assert Match.play(match, player_1, :sq11) == {:error, "Not player's turn."}
     end
 
     test "returns error when square is not found", %{player_1: player} do
