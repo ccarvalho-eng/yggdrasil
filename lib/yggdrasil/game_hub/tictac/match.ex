@@ -297,6 +297,9 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
     end
   end
 
+  @doc """
+  Manages player progression and ensures compliance with game rules during each turn.
+  """
   @spec play(t(), Player.t(), square :: atom()) :: {:ok, t()} | {:error, String.t()}
   def play({:ok, %__MODULE__{} = match}, player, square), do: play(match, player, square)
 
@@ -309,15 +312,13 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
     |> next_player_turn()
   end
 
-  @spec claim_square({:ok, t()} | {:error, String.t()}, Player.t(), square :: atom()) ::
-          {:ok, t()} | {:error, String.t()}
-  def claim_square({:ok, %__MODULE__{} = match}, player, square) do
+  defp claim_square({:ok, %__MODULE__{} = match}, player, square) do
     updated_board = Enum.map(match.board, &update_square(&1, square, player))
 
     {:ok, %__MODULE__{match | board: updated_board}}
   end
 
-  def claim_square(error, _, _), do: error
+  defp claim_square(error, _, _), do: error
 
   defp build_board do
     for row <- @row_range, col <- @col_range, do: Square.build(:"sq#{row}#{col}")

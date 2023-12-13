@@ -18,7 +18,7 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
     {:ok, match: match, player_1: player_1, player_2: player_2}
   end
 
-  describe "get_winning_combinations/2" do
+  describe "find_winning_combinations/2" do
     setup %{match: match, player_1: player} do
       {:ok, player: player, match: match}
     end
