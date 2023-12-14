@@ -171,6 +171,21 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   def begin(_), do: {:error, "Not enough players for the match."}
 
   @doc """
+  Gets a square by its name.
+  """
+  @spec get_square(t(), String.t()) :: {:ok, Square.t()} | {:error, String.t()}
+  def get_square(%__MODULE__{board: [%{name: square_name} = square | _]}, square_name) do
+    {:ok, square}
+  end
+
+  def get_square(%__MODULE__{board: [_ | squares]} = match, square_name) do
+    match = %__MODULE__{match | board: squares}
+    get_square(match, square_name)
+  end
+
+  def get_square(_, _), do: {:error, "Square not found."}
+
+  @doc """
   Returns true if it's the player's turn.
 
   ## Examples
@@ -282,17 +297,28 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
     end
   end
 
-  @spec play(t(), Player.t(), Square.t()) :: {:ok, t()} | {:error, String.t()}
+  @doc """
+  Manages player progression and ensures compliance with game rules during each turn.
+  """
+  @spec play(t(), Player.t(), square :: atom()) :: {:ok, t()} | {:error, String.t()}
   def play({:ok, %__MODULE__{} = match}, player, square), do: play(match, player, square)
 
   def play(match, player, square) do
     match
     |> validate_player_turn(player)
     |> validate_square(square)
-    |> put_letter(player, square)
+    |> claim_square(player, square)
     |> check_match_status()
     |> next_player_turn()
   end
+
+  defp claim_square({:ok, %__MODULE__{} = match}, player, square) do
+    updated_board = Enum.map(match.board, &update_square(&1, square, player))
+
+    {:ok, %__MODULE__{match | board: updated_board}}
+  end
+
+  defp claim_square(error, _, _), do: error
 
   defp build_board do
     for row <- @row_range, col <- @col_range, do: Square.build(:"sq#{row}#{col}")
@@ -337,18 +363,14 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   end
 
   defp validate_square({:ok, %__MODULE__{} = match}, square) do
-    if Square.is_open?(square), do: {:ok, match}, else: {:error, "Square is not open."}
+    case get_square(match, square) do
+      {:ok, %Square{letter: nil}} -> {:ok, match}
+      {:ok, %Square{}} -> {:error, "Square is already taken."}
+      {:error, _reason} = error -> error
+    end
   end
 
   defp validate_square(error, _), do: error
-
-  defp put_letter({:ok, %__MODULE__{} = match}, player, square) do
-    updated_board = Enum.map(match.board, &update_square(&1, square.name, player))
-
-    {:ok, %__MODULE__{match | board: updated_board}}
-  end
-
-  defp put_letter(error, _, _), do: error
 
   defp update_square(%Square{name: square_name} = sq, square_name, player),
     do: %Square{sq | letter: player.letter}
