@@ -35,19 +35,19 @@ defmodule Yggdrasil.GameHub.Tictac.Square do
   ## Examples
 
       iex> alias Yggdrasil.GameHub.Tictac.Square
-      iex> Square.is_open?(%Square{name: :sq11, letter: nil})
+      iex> Square.open?(%Square{name: :sq11, letter: nil})
       true
 
       iex> alias Yggdrasil.GameHub.Tictac.Square
-      iex> Square.is_open?(%Square{name: :sq11, letter: "O"})
+      iex> Square.open?(%Square{name: :sq11, letter: "O"})
       false
 
       iex> alias Yggdrasil.GameHub.Tictac.Square
-      iex> Square.is_open?(%Square{name: :sq11, letter: "X"})
+      iex> Square.open?(%Square{name: :sq11, letter: "X"})
       false
 
   """
-  @spec is_open?(t()) :: boolean()
-  def is_open?(%__MODULE__{letter: nil}), do: true
-  def is_open?(_), do: false
+  @spec open?(t()) :: boolean()
+  def open?(%__MODULE__{letter: nil}), do: true
+  def open?(_), do: false
 end
