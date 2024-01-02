@@ -194,15 +194,15 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
       iex> match = %Match{player_turn: "X"}
       iex> player_1 = Player.build("Kristoff", "X")
       iex> player_2 = Player.build("Larah", "O")
-      iex> Match.is_player_turn?(match, player_1)
+      iex> Match.player_turn?(match, player_1)
       true
-      iex> Match.is_player_turn?(match, player_2)
+      iex> Match.player_turn?(match, player_2)
       false
 
   """
-  @spec is_player_turn?(t(), Player.t()) :: boolean()
-  def is_player_turn?(%__MODULE__{player_turn: letter}, %Player{letter: letter}), do: true
-  def is_player_turn?(_, _), do: false
+  @spec player_turn?(t(), Player.t()) :: boolean()
+  def player_turn?(%__MODULE__{player_turn: letter}, %Player{letter: letter}), do: true
+  def player_turn?(_, _), do: false
 
   @doc """
   Returns a list of valid moves representing squares on the match board.
@@ -221,7 +221,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   @spec get_open_squares(t()) :: list(atom())
   def get_open_squares(match) do
     Enum.reduce(match.board, [], fn square, acc ->
-      if Square.is_open?(square), do: [square.name | acc], else: acc
+      if Square.open?(square), do: [square.name | acc], else: acc
     end)
   end
 
@@ -277,12 +277,12 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
       ...>     %Player{letter: "O", name: "Kristoff"}
       ...>   ]
       ...> }
-      iex> Match.is_match_over?(match)
+      iex> Match.match_over?(match)
       true
 
   """
-  @spec is_match_over?(t()) :: boolean()
-  def is_match_over?(match), do: did_any_player_win?(match) || draw?(match)
+  @spec match_over?(t()) :: boolean()
+  def match_over?(match), do: did_any_player_win?(match) || draw?(match)
 
   @doc """
   Returns the match's result.
@@ -359,7 +359,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   defp swap_letter(_), do: "O"
 
   defp validate_player_turn(match, player) do
-    if is_player_turn?(match, player), do: {:ok, match}, else: {:error, "Not player's turn."}
+    if player_turn?(match, player), do: {:ok, match}, else: {:error, "Not player's turn."}
   end
 
   defp validate_square({:ok, %__MODULE__{} = match}, square) do
