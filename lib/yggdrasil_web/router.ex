@@ -18,6 +18,7 @@ defmodule YggdrasilWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/games/:slug/join", GameController, :join
   end
 
   # Other scopes may use custom stacks.
