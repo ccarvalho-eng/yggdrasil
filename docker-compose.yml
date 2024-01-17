@@ -1,0 +1,23 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:16.1
+    container_name: yggdrasil-postgres
+    volumes:
+      - pgdata:/usr/share/yggdrasil/postgres/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - PGPASSWORD=postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+volumes:
+  pgdata:
+    driver: local
