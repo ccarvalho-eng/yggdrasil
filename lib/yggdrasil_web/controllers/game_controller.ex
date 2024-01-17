@@ -1,6 +1,9 @@
 defmodule YggdrasilWeb.GameController do
+  @moduledoc false
+
   use YggdrasilWeb, :controller
 
+  @doc false
   @spec join(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def join(conn, %{"slug" => "tic-tac-toe"}) do
     render(conn, :tic_tac)
