@@ -70,7 +70,9 @@ defmodule Yggdrasil.MixProject do
       {:excoveralls, "~> 0.10", only: :test},
       {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false},
       {:doctor, "~> 0.21.0", only: :dev},
-      {:typed_struct, "~> 0.3.0"}
+      {:typed_struct, "~> 0.3.0"},
+      {:horde, "~> 0.8.5"},
+      {:libcluster, "~> 3.3.3"}
     ]
   end
 
