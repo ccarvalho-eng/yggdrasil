@@ -71,7 +71,7 @@ defmodule Yggdrasil.MixProject do
       {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false},
       {:doctor, "~> 0.21.0", only: :dev},
       {:typed_struct, "~> 0.3.0"},
-      {:horde, "~> 0.8.5"},
+      {:horde, "~> 0.9.0"},
       {:libcluster, "~> 3.3.3"}
     ]
   end
