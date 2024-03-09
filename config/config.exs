@@ -9,7 +9,8 @@ import Config
 
 config :yggdrasil,
   ecto_repos: [Yggdrasil.Repo],
-  generators: [binary_id: true]
+  generators: [binary_id: true],
+  env: Mix.env()
 
 # Configures the endpoint
 config :yggdrasil, YggdrasilWeb.Endpoint,
