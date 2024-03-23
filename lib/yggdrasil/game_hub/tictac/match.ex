@@ -47,7 +47,8 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   ## Examples
 
       iex> alias Yggdrasil.GameHub.Tictac.{Match, Player, Square}
-      iex> player = Player.build("Kristoff", "X")
+      iex> changeset = Player.build(%{name: "Kristoff", letter: "X"})
+      iex> {:ok, player} = Player.insert(changeset)
       iex> Match.init(player)
       %Match{
         board: [
@@ -81,10 +82,12 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   ## Examples
 
       iex> alias Yggdrasil.GameHub.Tictac.{Match, Player, Square}
-      iex> player_1 = Player.build("Kristoff", "X")
-      iex> player_2 = Player.build("Larah", "X")
-      iex> match = Match.init(player_1)
-      iex> Match.join(match, player_2)
+      iex> changeset_0 = Player.build(%{name: "Kristoff", letter: "X"})
+      iex> {:ok, player_0} = Player.insert(changeset_0)
+      iex> changeset_1 = Player.build(%{name: "Larah", letter: "X"})
+      iex> {:ok, player_1} = Player.insert(changeset_1)
+      iex> match = Match.init(player_0)
+      iex> Match.join(match, player_1)
       {:ok,
         %Match{
           board: [
@@ -100,27 +103,30 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
           ],
           player_turn: nil,
           players: [
-            %Player{letter: "X", name: "Kristoff"},
-            %Player{letter: "O", name: "Larah"}
+            %Player{id: player_0.id, letter: "X", name: "Kristoff"},
+            %Player{id: player_1.id, letter: "O", name: "Larah"}
           ],
           status: :not_started
         }
       }
       iex> match = %Match{players: []}
-      iex> Match.join(match, player_2)
+      iex> Match.join(match, player_1)
       {:error, "You can only join a pre-existing match."}
-      iex> match = %Match{players: [player_1, player_2]}
-      iex> player_3 = Player.build("Ruth", "X")
-      iex> Match.join(match, player_3)
+      iex> match = %Match{players: [player_0, player_1]}
+      iex> changeset_2 = Player.build(%{name: "Ruth", letter: "X"})
+      iex> {:ok, player_2} = Player.insert(changeset_2)
+      iex> Match.join(match, player_2)
       {:error, "Only two players are permitted."}
 
   """
   @spec join(t(), Player.t()) :: {:error, String.t()}
-  def join(%__MODULE__{players: []}, _player),
-    do: {:error, "You can only join a pre-existing match."}
+  def join(%__MODULE__{players: []}, _player) do
+    {:error, "You can only join a pre-existing match."}
+  end
 
-  def join(%__MODULE__{players: [_player_1, _player_2]}, _player_3),
-    do: {:error, "Only two players are permitted."}
+  def join(%__MODULE__{players: [_player_1, _player_2]}, _player_3) do
+    {:error, "Only two players are permitted."}
+  end
 
   def join(%__MODULE__{players: [%{letter: l} = player_1]} = match, %{letter: l} = player_2) do
     player_2 = %Player{player_2 | letter: swap_letter(player_2)}
@@ -143,9 +149,11 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
       iex> match = %Match{status: :done}
       iex> Match.begin(match)
       {:error, "The match is already over."}
-      iex> player_1 = Player.build("Kristoff", "X")
-      iex> player_2 = Player.build("Larah", "O")
-      iex> match = %Match{status: :not_started, players: [player_1, player_2]}
+      iex> changeset_0 = Player.build(%{name: "Kristoff", letter: "X"})
+      iex> {:ok, player_0} = Player.insert(changeset_0)
+      iex> changeset_1 = Player.build(%{name: "Larah", letter: "O"})
+      iex> {:ok, player_1} = Player.insert(changeset_1)
+      iex> match = %Match{status: :not_started, players: [player_0, player_1]}
       iex> Match.begin(match)
       {:ok,
         %Match{
@@ -153,8 +161,8 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
           board: nil,
           player_turn: "O",
           players: [
-            %Player{letter: "X", name: "Kristoff"},
-            %Player{letter: "O", name: "Larah"}
+            %Player{id: player_0.id, letter: "X", name: "Kristoff"},
+            %Player{id: player_1.id, letter: "O", name: "Larah"}
           ]
         }
       }
@@ -192,11 +200,13 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
 
       iex> alias Yggdrasil.GameHub.Tictac.{Match, Player}
       iex> match = %Match{player_turn: "X"}
-      iex> player_1 = Player.build("Kristoff", "X")
-      iex> player_2 = Player.build("Larah", "O")
-      iex> Match.player_turn?(match, player_1)
+      iex> changeset_0 = Player.build(%{name: "Kristoff", letter: "X"})
+      iex> {:ok, player_0} = Player.insert(changeset_0)
+      iex> changeset_1 = Player.build(%{name: "Larah", letter: "O"})
+      iex> {:ok, player_1} = Player.insert(changeset_1)
+      iex> Match.player_turn?(match, player_0)
       true
-      iex> Match.player_turn?(match, player_2)
+      iex> Match.player_turn?(match, player_1)
       false
 
   """
@@ -212,7 +222,8 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   ## Examples
 
       iex> alias Yggdrasil.GameHub.Tictac.{Match, Player}
-      iex> player = Player.build("Kristoff", "X")
+      iex> changeset = Player.build(%{name: "Kristoff", letter: "X"})
+      iex> {:ok, player} = Player.insert(changeset)
       iex> match = Match.init(player)
       iex> Match.get_open_squares(match)
       [:sq33, :sq32, :sq31, :sq23, :sq22, :sq21, :sq13, :sq12, :sq11]

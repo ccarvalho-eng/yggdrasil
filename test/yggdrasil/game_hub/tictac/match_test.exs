@@ -11,15 +11,18 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
   @random_win Enum.random(@horizontal_wins ++ @vertical_wins ++ @diagonal_wins)
 
   setup do
-    player_1 = Player.build("Kristoff", "X")
-    player_2 = Player.build("Larah", "O")
+    changeset_0 = Player.build(%{name: "Kristoff", letter: "X"})
+    changeset_1 = Player.build(%{name: "Larah", letter: "O"})
 
-    {:ok, match} = player_1 |> Match.init() |> Match.join(player_2)
-    {:ok, match: match, player_1: player_1, player_2: player_2}
+    {:ok, player_0} = Player.insert(changeset_0)
+    {:ok, player_1} = Player.insert(changeset_1)
+
+    {:ok, match} = player_0 |> Match.init() |> Match.join(player_1)
+    {:ok, match: match, player_0: player_0, player_1: player_1}
   end
 
   describe "find_winning_combinations/2" do
-    setup %{match: match, player_1: player} do
+    setup %{match: match, player_0: player} do
       {:ok, player: player, match: match}
     end
 
@@ -54,8 +57,8 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
   end
 
   describe "result/2" do
-    test "returns match winner", %{match: match, player_1: player_1, player_2: player_2} do
-      for player <- [player_1, player_2] do
+    test "returns match winner", %{match: match, player_0: player_0, player_1: player_1} do
+      for player <- [player_0, player_1] do
         winning_combination = Enum.map(@random_win, &%Square{letter: player.letter, name: &1})
         match = %Match{match | board: winning_combination}
 
@@ -87,15 +90,15 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
 
   describe "play/3" do
     test "returns error when it's not the player's turn", %{
-      player_1: player_1,
-      player_2: player_2
+      player_0: player_0,
+      player_1: player_1
     } do
-      match = %Match{player_turn: player_2.letter}
+      match = %Match{player_turn: player_0.letter}
 
       assert Match.play(match, player_1, :sq11) == {:error, "Not player's turn."}
     end
 
-    test "returns error when square is not found", %{player_1: player} do
+    test "returns error when square is not found", %{player_0: player} do
       match = %Match{player_turn: player.letter}
 
       assert Match.play(match, player, :sq11) == {:error, "Square not found."}
@@ -103,28 +106,28 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
 
     test "updates board with player's letter", %{
       match: match,
-      player_1: player_1,
-      player_2: player_2
+      player_0: player_0,
+      player_1: player_1
     } do
-      match = %Match{match | player_turn: player_1.letter}
-      player_2_letter = player_2.letter
+      match = %Match{match | player_turn: player_0.letter}
+      player_1_letter = player_1.letter
 
       assert {
                :ok,
                %Match{
                  board: [%Square{letter: "X", name: :sq11} | _],
-                 player_turn: ^player_2_letter,
+                 player_turn: ^player_1_letter,
                  players: [
                    %Player{letter: "X", name: "Kristoff"},
                    %Player{letter: "O", name: "Larah"}
                  ]
                }
-             } = Match.play(match, player_1, :sq11)
+             } = Match.play(match, player_0, :sq11)
     end
 
     test "returns error when square is already taken", %{
       match: match,
-      player_1: player_1
+      player_0: player_0
     } do
       updated_board =
         Enum.map(match.board, fn
@@ -135,9 +138,9 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
             other
         end)
 
-      match = %Match{match | player_turn: player_1.letter, board: updated_board}
+      match = %Match{match | player_turn: player_0.letter, board: updated_board}
 
-      assert Match.play(match, player_1, :sq11) == {:error, "Square is already taken."}
+      assert Match.play(match, player_0, :sq11) == {:error, "Square is already taken."}
     end
   end
 
