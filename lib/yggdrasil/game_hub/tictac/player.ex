@@ -44,9 +44,7 @@ defmodule Yggdrasil.GameHub.Tictac.Player do
   end
 
   defp generate_id(%Ecto.Changeset{valid?: true} = cs) do
-    uuid = Ecto.UUID.generate()
-
-    if get_field(cs, :id), do: cs, else: put_change(cs, :id, uuid)
+    if get_field(cs, :id), do: cs, else: put_change(cs, :id, Ecto.UUID.generate())
   end
 
   defp generate_id(changeset), do: changeset
