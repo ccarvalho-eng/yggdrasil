@@ -11,11 +11,6 @@ defmodule Yggdrasil do
 
   @doc """
   Initializes a new game with the first player joining.
-
-  NOTE: For the time being, tictac toe is the only and
-  main game. Later on, we can introduce more games thus
-  we'd need a feature to let players choose which game
-  they want to play.
   """
   @spec new_game(Player.t()) :: Match.t()
   def new_game(player), do: Match.init(player)

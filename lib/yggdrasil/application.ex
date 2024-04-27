@@ -47,9 +47,7 @@ defmodule Yggdrasil.Application do
   defp libcluster(:prod) do
     Logger.info("Using libcluster(:prod) mode. DNSPoll strategy.")
 
-    app_name =
-      System.get_env("FLY_APP_NAME") ||
-        raise "FLY_APP_NAME not available."
+    app_name = System.get_env("APP_NAME") || raise "APP_NAME not available."
 
     [
       topologies: [
