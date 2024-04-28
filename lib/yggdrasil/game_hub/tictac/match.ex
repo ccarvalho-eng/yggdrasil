@@ -33,6 +33,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   end
 
   typedstruct do
+    field(:code, String.t())
     field(:players, [Player.t()])
     field(:player_turn, binary())
     field(:board, [Square.t()])
@@ -68,9 +69,17 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
       }
 
   """
-  @spec init(Player.t()) :: t()
-  def init(player) do
-    struct(__MODULE__, %{players: [player], player_turn: nil, board: build_board()})
+  @spec init(code :: String.t(), Player.t()) :: t()
+  def init(code, player) do
+    struct(
+      __MODULE__,
+      %{
+        code: code,
+        players: [player],
+        player_turn: nil,
+        board: build_board()
+      }
+    )
   end
 
   @doc """
