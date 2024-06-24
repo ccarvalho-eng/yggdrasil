@@ -33,6 +33,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
   end
 
   typedstruct do
+    field(:code, String.t())
     field(:players, [Player.t()])
     field(:player_turn, binary())
     field(:board, [Square.t()])
@@ -49,7 +50,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
       iex> alias Yggdrasil.GameHub.Tictac.{Match, Player, Square}
       iex> changeset = Player.build(%{name: "Kristoff", letter: "X"})
       iex> {:ok, player} = Player.insert(changeset)
-      iex> Match.init(player)
+      iex> Match.init("some code", player)
       %Match{
         board: [
           %Square{letter: nil, name: :sq11},
@@ -62,15 +63,24 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
           %Square{letter: nil, name: :sq32},
           %Square{letter: nil, name: :sq33}
         ],
+        code: "some code",
         player_turn: nil,
         players: [player],
         status: :not_started
       }
 
   """
-  @spec init(Player.t()) :: t()
-  def init(player) do
-    struct(__MODULE__, %{players: [player], player_turn: nil, board: build_board()})
+  @spec init(code :: String.t(), Player.t()) :: t()
+  def init(code, player) do
+    struct(
+      __MODULE__,
+      %{
+        code: code,
+        players: [player],
+        player_turn: nil,
+        board: build_board()
+      }
+    )
   end
 
   @doc """
@@ -86,7 +96,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
       iex> {:ok, player_0} = Player.insert(changeset_0)
       iex> changeset_1 = Player.build(%{name: "Larah", letter: "X"})
       iex> {:ok, player_1} = Player.insert(changeset_1)
-      iex> match = Match.init(player_0)
+      iex> match = Match.init("some code", player_0)
       iex> Match.join(match, player_1)
       {:ok,
         %Match{
@@ -101,6 +111,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
             %Square{letter: nil, name: :sq32},
             %Square{letter: nil, name: :sq33}
           ],
+          code: "some code",
           player_turn: nil,
           players: [
             %Player{id: player_0.id, letter: "X", name: "Kristoff"},
@@ -224,7 +235,7 @@ defmodule Yggdrasil.GameHub.Tictac.Match do
       iex> alias Yggdrasil.GameHub.Tictac.{Match, Player}
       iex> changeset = Player.build(%{name: "Kristoff", letter: "X"})
       iex> {:ok, player} = Player.insert(changeset)
-      iex> match = Match.init(player)
+      iex> match = Match.init("some code", player)
       iex> Match.get_open_squares(match)
       [:sq33, :sq32, :sq31, :sq23, :sq22, :sq21, :sq13, :sq12, :sq11]
 

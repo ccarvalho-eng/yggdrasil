@@ -17,7 +17,7 @@ defmodule Yggdrasil.GameHub.Tictac.Player do
   @foreign_key_type :binary_id
   embedded_schema do
     field :name, :string
-    field :letter, :string
+    field :letter, :string, default: "O"
   end
 
   @doc """
