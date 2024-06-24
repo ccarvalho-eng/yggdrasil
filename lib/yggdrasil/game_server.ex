@@ -8,9 +8,14 @@ defmodule Yggdrasil.GameServer do
   require Logger
 
   alias __MODULE__
+  alias Yggdrasil.GameHub.Tictac.Match, as: TictacMatch
   alias Yggdrasil.GameHub.Tictac.Player, as: TicTacPlayer
 
   @type player :: TicTactPlayer
+
+  @games %{
+    tic_tac: TicTacMatch
+  }
 
   # Client
 
@@ -79,7 +84,7 @@ defmodule Yggdrasil.GameServer do
   """
   @spec join_match(code :: String.t(), player()) :: :ok | {:error, String.t()}
   def join_match(code, player) do
-    code |> build_server_name() |> GenServer.call({:join_game, player})
+    code |> build_server_name() |> GenServer.call({:join_match, player})
   end
 
   @doc """
@@ -108,6 +113,15 @@ defmodule Yggdrasil.GameServer do
   end
 
   # Server (callbacks)
+
+  @impl true
+  def init(attrs, game \\ :tic_tac) do
+    {:ok, @games[game].new(attrs.code, attrs.player)}
+  end
+
+  @impl true
+  def handle_call({:join_match, player}, _from, match) do
+  end
 
   defp build_server_name(code) do
     {:via, Horde.Registry, {Tictac.GameRegistry, code}}

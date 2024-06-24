@@ -17,7 +17,7 @@ defmodule Yggdrasil.GameHub.Tictac.MatchTest do
     {:ok, player_0} = Player.insert(changeset_0)
     {:ok, player_1} = Player.insert(changeset_1)
 
-    {:ok, match} = player_0 |> Match.init() |> Match.join(player_1)
+    {:ok, match} = "some code" |> Match.init(player_0) |> Match.join(player_1)
     {:ok, match: match, player_0: player_0, player_1: player_1}
   end
 
